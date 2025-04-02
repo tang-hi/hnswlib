@@ -1,17 +1,20 @@
 #pragma once
-#include "hnswlib.h"
+#include "hnswlib/hnswlib.h"
 #include "hnswlib/space_l2.h"
+#include "Eigen/Dense"
+#include "hnswlib/utils.h"
 #include <cstddef>
 
 namespace hnswlib {
 
 static float L2Sqr(const void *vec1, const void *vec2, const void *dim);
 
-class AdSampling : public AlgorithmInterface<float> {
+class AdSampling : public SpaceInterface<float> {
 private:
   DISTFUNC<float> fstdistfunc_;
   size_t data_size_;
   size_t dim_;
+  Eigen::MatrixXf orthogonal_matrix_;
 
   constexpr static const int batch_size = 8;
 
@@ -22,6 +25,7 @@ public:
     fstdistfunc_ = L2Sqr;
     dim_ = dim;
     data_size_ = dim * sizeof(float);
+    orthogonal_matrix_ = createOrthogonal(dim);
   }
 
   float L2Distance(const void *vec1, const void *vec2) {

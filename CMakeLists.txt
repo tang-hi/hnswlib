@@ -10,6 +10,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_library(hnswlib INTERFACE)
 add_library(hnswlib::hnswlib ALIAS hnswlib)
 find_package(spdlog REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(Catch2 REQUIRED)
 target_include_directories(hnswlib INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
@@ -33,7 +35,7 @@ else()
     option(HNSWLIB_EXAMPLES "Build examples and tests." OFF)
 endif()
 if(HNSWLIB_EXAMPLES)
-    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 17)
 
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
       SET( CMAKE_CXX_FLAGS  "-Ofast -std=c++11 -DHAVE_CXX0X -openmp -fpic" )
@@ -103,4 +105,8 @@ if(HNSWLIB_EXAMPLES)
 
     add_executable(main tests/cpp/main.cpp tests/cpp/sift_1b.cpp)
     target_link_libraries(main hnswlib spdlog::spdlog)
+
+    add_executable(utils_test tests/cpp/utils_test.cpp)
+    target_link_libraries(utils_test Catch2::Catch2WithMain Eigen3::Eigen)
+    target_include_directories(utils_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 endif()

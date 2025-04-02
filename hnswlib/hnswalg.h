@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <unordered_set>
-#include <list>
 #include <memory>
 
 namespace hnswlib {
@@ -71,8 +70,7 @@ class HierarchicalNSW : public AlgorithmInterface<dist_t> {
     std::unordered_set<tableint> deleted_elements;  // contains internal ids of deleted elements
 
 
-    HierarchicalNSW(SpaceInterface<dist_t> *s) {
-    }
+    HierarchicalNSW(SpaceInterface<dist_t> *s) = default;
 
 
     HierarchicalNSW(
